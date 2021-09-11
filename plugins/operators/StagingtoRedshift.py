@@ -20,7 +20,7 @@ class StagetoRedshiftOperator(BaseOperator):
     """
 
     staging_table_stmt = """
-        COPY staging_part_supplier FROM 's3://{}/{}'
+        COPY {} FROM 's3://{}/{}'
         CREDENTIALS 'aws_access_key_id={};aws_secret_access_key={}' CSV;
         """
     @apply_defaults
@@ -50,6 +50,7 @@ class StagetoRedshiftOperator(BaseOperator):
         redshift_hook.run("TRUNCATE {}".format(self.table))
 
         sql_stmt = StagetoRedshift.staging_table_stmt.format(
+                                        self.table,
                                         self.s3_bucket,
                                         self.s3_key,
                                         credentials.access_key,
